@@ -1,0 +1,44 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "ts-node-dev",
+      "restart": true,
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node",
+      "runtimeArgs": ["ts-node-dev", "${workspaceFolder}/src/index.ts"]
+    },
+    {
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "test",
+      "restart": false,
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node",
+      "runtimeArgs": ["test"]
+    },
+    {
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "Run current file",
+      "request": "launch",
+      "runtimeExecutable": "ts-node",
+      "program": "${file}",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node"
+    },
+    {
+      "name": "Attach to Node Functions",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "preLaunchTask": "func: host start"
+    }
+  ]
+}
