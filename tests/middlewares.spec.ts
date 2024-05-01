@@ -78,4 +78,85 @@ describe("Middlewares", () => {
       );
     });
   });
+
+  describe("#protectedPathMiddleware", () => {
+    const redirect = jest.fn();
+    const resp: {
+      cookie: (name: string, body: any) => void;
+      send: (content: string) => void;
+      redirect: (content: string) => void;
+    } = {
+      cookie(name: string, body: any) {},
+      send(returnContent: string) {},
+      redirect,
+    };
+    const next = jest.fn();
+    test("Should test access token to protected path", async () => {
+      const spytokenTest = jest
+        .spyOn(servicesMock, "tokenTestService")
+        .mockImplementation(() => Promise.resolve(true));
+      await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
+        {
+          cookies: { authorization: "any_token" },
+          path: { match: (_: string) => true },
+        } as any,
+        resp as any,
+        next
+      );
+      expect(spytokenTest).toHaveBeenCalledWith("any_token");
+    });
+    test("Should redirect to correct path on token error", async () => {
+      jest.spyOn(servicesMock, "tokenTestService").mockImplementation(() => {
+        throw new Error("any_error");
+      });
+      await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
+        {
+          cookies: { authorization: "any_token" },
+          path: { match: (_: string) => true },
+        } as any,
+        resp as any,
+        next
+      );
+      expect(redirect).toHaveBeenCalledWith("any_errorUrl");
+    });
+    test("Should redirect to correct path on token false", async () => {
+      jest
+        .spyOn(servicesMock, "tokenTestService")
+        .mockImplementation(() => Promise.resolve(false));
+      await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
+        {
+          cookies: { authorization: "any_token" },
+          path: { match: (_: string) => true },
+        } as any,
+        resp as any,
+        next
+      );
+      expect(redirect).toHaveBeenCalledWith("any_errorUrl");
+    });
+    test("Should call next on success", async () => {
+      jest
+        .spyOn(servicesMock, "tokenTestService")
+        .mockImplementation(() => Promise.resolve(true));
+      await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
+        {
+          cookies: { authorization: "any_token" },
+          path: { match: (_: string) => true },
+        } as any,
+        resp as any,
+        next
+      );
+      expect(next).toHaveBeenCalled();
+    });
+    test("Should call next case path doesnt match with protected", async () => {
+      await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
+        {
+          cookies: { authorization: "any_token" },
+          path: { match: (_: string) => false },
+        } as any,
+        resp as any,
+        next
+      );
+      expect(next).toHaveBeenCalled();
+    });
+  });
 });
