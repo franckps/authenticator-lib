@@ -1,7 +1,15 @@
 import { TokenModel } from "./models/tokenModel";
+import addr from "./server_addresses";
 
-export const tokenExchangeService = function (
+export const tokenExchangeService = async function (
   code: string
 ): Promise<TokenModel> {
-  return Promise.resolve({ token: null } as any);
+  const data = await fetch(addr.TOKEN_EXCHANGE, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: `{"code":"${code}"}`,
+  });
+  return data.json();
 };
