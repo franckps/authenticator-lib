@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { tokenExchangeService } from "./services";
+import { tokenExchangeService, tokenTestService } from "./services";
+
+type IMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Promise<void>;
 
 export default class Middlewares {
-  public static callbackMiddleware(): (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void> {
+  public static callbackMiddleware(): IMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const code = req.query.code;
       if (!code) throw new Error("Code value is not present");
@@ -15,6 +17,24 @@ export default class Middlewares {
       res.send(
         `<script>window.parent.postMessage('{"type":"logon","success":true}');</script>`
       );
+    };
+  }
+
+  public static protectedPathMiddleware(
+    protectedPath: string,
+    error_url: string
+  ): IMiddleware {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      if (req.path.match(protectedPath)) {
+        const authorization = req.cookies.authorization;
+        try {
+          const isValidToken = await tokenTestService(authorization);
+          if (isValidToken) next();
+          else res.redirect(error_url);
+        } catch (err) {
+          res.redirect(error_url);
+        }
+      } else return next();
     };
   }
 }

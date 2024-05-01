@@ -13,3 +13,9 @@ export const tokenExchangeService = async function (
   });
   return data.json();
 };
+
+export const tokenTestService = async function (
+  token: string
+): Promise<boolean> {
+  return Promise.resolve(true);
+};
