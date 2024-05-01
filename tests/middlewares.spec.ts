@@ -25,7 +25,11 @@ describe("Middlewares", () => {
       }
     });
     test("Should call token exchange with correct value", async () => {
-      const spyExchange = jest.spyOn(servicesMock, "tokenExchangeService");
+      const spyExchange = jest
+        .spyOn(servicesMock, "tokenExchangeService")
+        .mockImplementation(() =>
+          Promise.resolve({ token: "any_token" } as any)
+        );
       await sut.callbackMiddleware()(
         { query: { code: "any_code" } } as any,
         resp as any,
