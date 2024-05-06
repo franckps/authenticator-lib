@@ -79,6 +79,36 @@ describe("Middlewares", () => {
     });
   });
 
+  describe("#logoutCallbackMiddleware", () => {
+    const resp: {
+      cookie: (name: string, body: any) => void;
+      send: (content: string) => void;
+    } = {
+      cookie(name: string, body: any) {},
+      send(returnContent: string) {},
+    };
+    const next = jest.fn();
+
+    test("Should remove authorization from cookiee", async () => {
+      const spyCookie = jest.spyOn(resp, "cookie");
+      await sut.logoutCallbackMiddleware()({} as any, resp as any, next);
+      expect(spyCookie).toHaveBeenCalledWith("authorization", null, {
+        expires: expect.any(Date),
+      });
+    });
+
+    test("Should return correct content", async () => {
+      jest
+        .spyOn(servicesMock, "tokenExchangeService")
+        .mockReturnValue(Promise.resolve({ token: "any_token" } as any));
+      const spySend = jest.spyOn(resp, "send");
+      await sut.logoutCallbackMiddleware()({} as any, resp as any, next);
+      expect(spySend).toHaveBeenCalledWith(
+        `<script>window.parent.postMessage('{"type":"logout","success":true}');</script>`
+      );
+    });
+  });
+
   describe("#protectedPathMiddleware", () => {
     const redirect = jest.fn();
     const resp: {
