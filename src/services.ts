@@ -18,5 +18,13 @@ export const tokenExchangeService = async function (
 export const userByTokenService = async function (
   token: string
 ): Promise<UserModel> {
-  return Promise.resolve(null as any);
+  const data = await fetch(addr.USER_INFO, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: "{}",
+  });
+  return data.json();
 };
