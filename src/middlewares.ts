@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { tokenExchangeService, tokenTestService } from "./services";
+import { tokenExchangeService, userByTokenService } from "./services";
 
 type IMiddleware = (
   req: Request,
@@ -28,7 +28,7 @@ export default class Middlewares {
       if (req.path.match(protectedPath)) {
         const authorization = req.cookies.authorization;
         try {
-          const isValidToken = await tokenTestService(authorization);
+          const isValidToken = await userByTokenService(authorization);
           if (isValidToken) next();
           else res.redirect(error_url);
         } catch (err) {

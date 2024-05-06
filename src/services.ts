@@ -1,4 +1,5 @@
 import { TokenModel } from "./models/tokenModel";
+import { UserModel } from "./models/userModel";
 import addr from "./server_addresses";
 
 export const tokenExchangeService = async function (
@@ -14,8 +15,8 @@ export const tokenExchangeService = async function (
   return data.json();
 };
 
-export const tokenTestService = async function (
+export const userByTokenService = async function (
   token: string
-): Promise<boolean> {
-  return Promise.resolve(true);
+): Promise<UserModel> {
+  return Promise.resolve(null as any);
 };
