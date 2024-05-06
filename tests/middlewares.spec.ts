@@ -93,8 +93,13 @@ describe("Middlewares", () => {
     const next = jest.fn();
     test("Should test access token to protected path", async () => {
       const spytokenTest = jest
-        .spyOn(servicesMock, "tokenTestService")
-        .mockImplementation(() => Promise.resolve(true));
+        .spyOn(servicesMock, "userByTokenService")
+        .mockImplementation(() =>
+          Promise.resolve({
+            userId: "any_userId",
+            username: "any_username",
+          } as any)
+        );
       await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
         {
           cookies: { authorization: "any_token" },
@@ -106,7 +111,7 @@ describe("Middlewares", () => {
       expect(spytokenTest).toHaveBeenCalledWith("any_token");
     });
     test("Should redirect to correct path on token error", async () => {
-      jest.spyOn(servicesMock, "tokenTestService").mockImplementation(() => {
+      jest.spyOn(servicesMock, "userByTokenService").mockImplementation(() => {
         throw new Error("any_error");
       });
       await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
@@ -121,8 +126,8 @@ describe("Middlewares", () => {
     });
     test("Should redirect to correct path on token false", async () => {
       jest
-        .spyOn(servicesMock, "tokenTestService")
-        .mockImplementation(() => Promise.resolve(false));
+        .spyOn(servicesMock, "userByTokenService")
+        .mockImplementation(() => Promise.resolve(null as any));
       await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
         {
           cookies: { authorization: "any_token" },
@@ -134,9 +139,12 @@ describe("Middlewares", () => {
       expect(redirect).toHaveBeenCalledWith("any_errorUrl");
     });
     test("Should call next on success", async () => {
-      jest
-        .spyOn(servicesMock, "tokenTestService")
-        .mockImplementation(() => Promise.resolve(true));
+      jest.spyOn(servicesMock, "userByTokenService").mockImplementation(() =>
+        Promise.resolve({
+          userId: "any_userId",
+          username: "any_username",
+        } as any)
+      );
       await sut.protectedPathMiddleware("any_path", "any_errorUrl")(
         {
           cookies: { authorization: "any_token" },

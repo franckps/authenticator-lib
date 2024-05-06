@@ -1,4 +1,4 @@
-import { tokenExchangeService } from "../src/services";
+import { tokenExchangeService, userByTokenService } from "../src/services";
 import addr from "../src/server_addresses";
 
 const json = jest.fn().mockReturnValue(
@@ -39,6 +39,34 @@ describe("Services", () => {
     test("Should return a result on success", async () => {
       const result = await tokenExchangeService("any_code");
       expect(result.token).toEqual("any_token");
+    });
+  });
+
+  describe("#tokenTestService", () => {
+    test("Should call fetch correctly", async () => {
+      await userByTokenService("any_token");
+      expect(spyFetch).toHaveBeenCalledWith(addr.USER_INFO, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "any_token",
+        },
+        body: "{}",
+      });
+      expect(json).toHaveBeenCalled();
+    });
+    test("Should fail case fetch fail", async () => {
+      spyFetch.mockRejectedValueOnce(new Error("any_error"));
+      try {
+        await userByTokenService("any_token");
+        expect(false).toBeTruthy();
+      } catch (err: any) {
+        expect(err.message).toEqual("any_error");
+      }
+    });
+    test("Should return a result on success", async () => {
+      const result = await userByTokenService("any_token");
+      expect(result.username).toEqual("any_username");
     });
   });
 });
