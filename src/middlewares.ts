@@ -20,6 +20,15 @@ export default class Middlewares {
     };
   }
 
+  public static logoutCallbackMiddleware(): IMiddleware {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      res.cookie("authorization", null, { expires: new Date() });
+      res.send(
+        `<script>window.parent.postMessage('{"type":"logout","success":true}');</script>`
+      );
+    };
+  }
+
   public static protectedPathMiddleware(
     protectedPath: string,
     error_url: string
