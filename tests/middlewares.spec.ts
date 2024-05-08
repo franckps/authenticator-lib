@@ -1,4 +1,4 @@
-import sut from "../src/middlewares";
+import { Middlewares as sut } from "../src/middlewares";
 import * as servicesMock from "../src/services";
 
 describe("Middlewares", () => {

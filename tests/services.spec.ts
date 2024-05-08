@@ -66,6 +66,17 @@ describe("Services", () => {
         expect(err.message).toEqual("any_error");
       }
     });
+    test("Should return null case fetch return a http error status", async () => {
+      spyFetch.mockReturnValueOnce(
+        Promise.resolve({
+          json,
+          status: 400,
+        } as any)
+      );
+
+      const result = await userByTokenService("any_token");
+      expect(result).toBeNull();
+    });
     test("Should return a result on success", async () => {
       json.mockReturnValueOnce(
         Promise.resolve({
