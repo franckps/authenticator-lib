@@ -1,16 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleDetection": "force",
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "outDir": "dist",
-    "allowJs": true,
-    "sourceMap": true
+    "outDir": "build"
   },
-  "exclude": ["node_modules", "**/*.spec.ts"],
-  "files": ["custom.d.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts", "build"],
+  "files": ["index.ts", "custom.d.ts"]
 }

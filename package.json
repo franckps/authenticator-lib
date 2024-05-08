@@ -1,18 +1,25 @@
 {
-  "name": "authenticator-lib",
+  "name": "@franciscodev.pro/authenticator",
   "version": "1.0.0",
+  "private": false,
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
+  "types": "build/index.d.js",
+  "files": [
+    "build",
+    "README.md"
+  ],
   "scripts": {
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --no-cache",
     "test:verbose": "jest --passWithNoTests --watch --runInBand",
     "test:unit": "npm run test -- --watch -c jest-unit-config.js",
     "test:integration": "jest --passWithNoTests --runInBand -c jest-integration-config.js",
     "test:staged": "npm run test -- --findRelatedTests",
-    "test:coverage": "jest --passWithNoTests --silent --noStackTrace --no-cache --coverage"
+    "test:coverage": "jest --passWithNoTests --silent --noStackTrace --no-cache --coverage",
+    "build": "npx tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "franciscodev.pro",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
