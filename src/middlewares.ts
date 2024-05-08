@@ -7,7 +7,7 @@ type IMiddleware = (
   next: NextFunction
 ) => Promise<void>;
 
-export default class Middlewares {
+export class Middlewares {
   public static callbackMiddleware(): IMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       const code = req.query.code;

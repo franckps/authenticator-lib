@@ -12,7 +12,7 @@ export const tokenExchangeService = async function (
     },
     body: `{"code":"${code}"}`,
   });
-  return data.json();
+  return (data as any).json();
 };
 
 export const userByTokenService = async function (
@@ -26,5 +26,7 @@ export const userByTokenService = async function (
     },
     body: "{}",
   });
-  return data.json();
+  if (data.status > 299 || data.status < 200) return null as any;
+
+  return (data as any).json();
 };
