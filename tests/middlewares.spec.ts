@@ -1,5 +1,6 @@
 import { Middlewares as sut } from "../src/middlewares";
 import * as servicesMock from "../src/services";
+import { jsScriptGenerator } from "../src/utils";
 
 describe("Middlewares", () => {
   describe("#callbackMiddleware", () => {
@@ -234,6 +235,26 @@ describe("Middlewares", () => {
       );
       expect(headers.authorization).toEqual("any_authorization");
       expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe("#javascriptSdkMiddleware", () => {
+    const resp: {
+      cookie: (name: string, body: any) => void;
+      send: (content: string) => void;
+      type: (mimeType: string) => void;
+    } = {
+      cookie(name: string, body: any) {},
+      send(returnContent: string) {},
+      type(mimeType: string) {},
+    };
+    const next = jest.fn();
+    test("Should send the correct script content", async () => {
+      const spySend = jest.spyOn(resp, "send");
+      const spyType = jest.spyOn(resp, "type");
+      await sut.javascriptSdkMiddleware()({} as any, resp as any, next);
+      expect(spySend).toHaveBeenCalledWith(jsScriptGenerator());
+      expect(spyType).toHaveBeenCalledWith("text/javascript");
     });
   });
 });
