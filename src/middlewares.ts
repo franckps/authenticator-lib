@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { tokenExchangeService, userByTokenService } from "./services";
+import { jsScriptGenerator } from "./utils";
 
 type IMiddleware = (
   req: Request,
@@ -52,6 +53,13 @@ export class Middlewares {
       if (!!req.cookies.authorization)
         req.headers.authorization = req.cookies.authorization;
       next();
+    };
+  }
+
+  public static javascriptSdkMiddleware(): IMiddleware {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      res.type("text/javascript");
+      res.send(jsScriptGenerator());
     };
   }
 }
