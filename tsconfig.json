@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
     "target": "ESNext",
     "module": "CommonJS",
-    "moduleDetection": "force",
+    "declaration": true,
+    "outDir": "build",
     "strict": true,
+    "downlevelIteration": true,
+
     "skipLibCheck": true,
-    "outDir": "build"
+    "moduleDetection": "force",
+    "lib": ["ESNext"]
   },
   "exclude": ["node_modules", "**/*.spec.ts", "build"],
-  "files": ["index.ts", "custom.d.ts"]
+  "include": ["index.ts"]
 }
