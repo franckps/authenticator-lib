@@ -46,4 +46,12 @@ export class Middlewares {
       } else return next();
     };
   }
+
+  public static authorizationHeaderMiddleware(): IMiddleware {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      if (!!req.cookies.authorization)
+        req.headers.authorization = req.cookies.authorization;
+      next();
+    };
+  }
 }
