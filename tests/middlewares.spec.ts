@@ -197,4 +197,43 @@ describe("Middlewares", () => {
       expect(next).toHaveBeenCalled();
     });
   });
+
+  describe("#authorizationHeaderMiddleware", () => {
+    const resp: {
+      cookie: (name: string, body: any) => void;
+      send: (content: string) => void;
+    } = {
+      cookie(name: string, body: any) {},
+      send(returnContent: string) {},
+    };
+    const next = jest.fn();
+    test("Should not set authorization header value case cookie be not present", async () => {
+      let headers = { authorization: "other_authorization" };
+      await sut.authorizationHeaderMiddleware()(
+        {
+          query: { code: "any_code" },
+          cookies: { authorization: null },
+          headers,
+        } as any,
+        resp as any,
+        next
+      );
+      expect(headers.authorization).toEqual("other_authorization");
+      expect(next).toHaveBeenCalled();
+    });
+    test("Should set authorization header value from cookie on success", async () => {
+      let headers = { authorization: "other_authorization" };
+      await sut.authorizationHeaderMiddleware()(
+        {
+          query: { code: "any_code" },
+          cookies: { authorization: "any_authorization" },
+          headers,
+        } as any,
+        resp as any,
+        next
+      );
+      expect(headers.authorization).toEqual("any_authorization");
+      expect(next).toHaveBeenCalled();
+    });
+  });
 });
