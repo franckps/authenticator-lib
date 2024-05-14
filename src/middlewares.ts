@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { tokenExchangeService, userByTokenService } from "./services";
 import { jsScriptGenerator } from "./utils";
+import cookieParser from "cookie-parser";
 
 type IMiddleware = (
   req: Request,
@@ -60,6 +61,12 @@ export class Middlewares {
     return async (req: Request, res: Response, next: NextFunction) => {
       res.type("text/javascript");
       res.send(jsScriptGenerator());
+    };
+  }
+
+  public static tokenVehicleMiddleware(): IMiddleware {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      cookieParser()(req, res, next);
     };
   }
 }
