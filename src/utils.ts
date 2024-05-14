@@ -1,5 +1,7 @@
+const BASE_URL = process.env.AUTHENTICATOR_BASE_URL || "http://localhost:3000";
+
 export const jsScriptGenerator = () => `class AuthenticatorConsts {
-    BASE_URL = "http://localhost:3000";
+    BASE_URL = "${BASE_URL}";
     DEFAULT_ADMIN_URL = this.BASE_URL + "/web/client/admin";
     LOGON_URL = this.BASE_URL + "/web/client/logon";
     DEFAULT_CLIENT_URL = this.LOGON_URL;
@@ -11,7 +13,7 @@ export const jsScriptGenerator = () => `class AuthenticatorConsts {
     default_authenticated_url
   ) {
     document.getElementById(id_authentication_screen_container).innerHTML =
-      '<iframe id="authenticator-iframe-logon" src="/web/logon/" frameborder="0" class="border-black h-[100vh]" width="300"></iframe>';
+      '<iframe id="authenticator-iframe-logon" src="${BASE_URL}/web/logon/" frameborder="0" class="border-black h-[100vh]" width="300"></iframe>';
   
     window.addEventListener(
       "message",
@@ -35,7 +37,7 @@ export const jsScriptGenerator = () => `class AuthenticatorConsts {
     default_unauthenticated_url
   ) {
     document.getElementById(id_logout_screen_container).innerHTML =
-      '<iframe src="/web/user-options/" frameborder="0"></iframe>';
+      '<iframe src="${BASE_URL}/web/user-options/" frameborder="0"></iframe>';
   
     window.addEventListener(
       "message",
