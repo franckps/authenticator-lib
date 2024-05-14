@@ -1,6 +1,13 @@
 import { Middlewares as sut } from "../src/middlewares";
 import * as servicesMock from "../src/services";
 import { jsScriptGenerator } from "../src/utils";
+const cookieParser = jest.fn();
+jest.mock("cookie-parser", () => {
+  return {
+    __esModule: true,
+    default: () => cookieParser,
+  };
+});
 
 describe("Middlewares", () => {
   describe("#callbackMiddleware", () => {
@@ -255,6 +262,13 @@ describe("Middlewares", () => {
       await sut.javascriptSdkMiddleware()({} as any, resp as any, next);
       expect(spySend).toHaveBeenCalledWith(jsScriptGenerator());
       expect(spyType).toHaveBeenCalledWith("text/javascript");
+    });
+  });
+
+  describe("#tokenVehicleMiddleware", () => {
+    test("Should return cookieParser invocation", async () => {
+      await sut.tokenVehicleMiddleware()({} as any, {} as any, jest.fn());
+      expect(cookieParser).toHaveBeenCalled();
     });
   });
 });
