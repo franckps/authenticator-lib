@@ -17,7 +17,7 @@ export class Middlewares {
       const tokenData = await tokenExchangeService(code as any);
       res.cookie("authorization", tokenData.token);
       res.send(
-        `<script>window.parent.postMessage('{"type":"logon","success":true}');</script>`
+        `<script>window.parent.postMessage('{"type":"logon","success":true}', '*');</script>`
       );
     };
   }
@@ -26,7 +26,7 @@ export class Middlewares {
     return async (req: Request, res: Response, next: NextFunction) => {
       res.cookie("authorization", null, { expires: new Date() });
       res.send(
-        `<script>window.parent.postMessage('{"type":"logout","success":true}');</script>`
+        `<script>window.parent.postMessage('{"type":"logout","success":true}', '*');</script>`
       );
     };
   }
