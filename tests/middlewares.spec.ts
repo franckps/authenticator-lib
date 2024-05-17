@@ -82,7 +82,7 @@ describe("Middlewares", () => {
         next
       );
       expect(spySend).toHaveBeenCalledWith(
-        `<script>window.parent.postMessage('{"type":"logon","success":true}');</script>`
+        `<script>window.parent.postMessage('{"type":"logon","success":true}', '*');</script>`
       );
     });
   });
@@ -112,7 +112,7 @@ describe("Middlewares", () => {
       const spySend = jest.spyOn(resp, "send");
       await sut.logoutCallbackMiddleware()({} as any, resp as any, next);
       expect(spySend).toHaveBeenCalledWith(
-        `<script>window.parent.postMessage('{"type":"logout","success":true}');</script>`
+        `<script>window.parent.postMessage('{"type":"logout","success":true}', '*');</script>`
       );
     });
   });
